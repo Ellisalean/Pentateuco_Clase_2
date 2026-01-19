@@ -5,21 +5,19 @@ import { ContentBlock } from '../types';
 export const BlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
   switch (block.type) {
     case 'heading':
-      // Fix: Use a specific string union for dynamic tags to avoid JSX namespace issues and ensure it's a valid intrinsic element.
       const level = block.level || 2;
       const Tag = `h${level}` as 'h2' | 'h3' | 'h4';
       
-      // Fix: Use a typed record for heading classes to ensure safe property access and avoid indexing errors.
       const headingClasses: Record<number, string> = {
-        2: "text-3xl font-bold text-[#8B4513] border-b-2 border-[#CD853F] pb-2 mb-6 mt-8",
-        3: "text-2xl font-semibold text-[#A0522D] mb-4 mt-6",
-        4: "text-xl font-medium text-[#CD853F] mb-3"
+        2: "text-2xl md:text-3xl font-bold text-[#8B4513] border-b-2 border-[#CD853F] pb-2 mb-6 mt-8",
+        3: "text-xl md:text-2xl font-semibold text-[#A0522D] mb-4 mt-6",
+        4: "text-lg md:text-xl font-medium text-[#CD853F] mb-3"
       };
       
       return <Tag className={headingClasses[level]}>{block.text}</Tag>;
 
     case 'paragraph':
-      return <p className="text-gray-700 leading-relaxed mb-4 text-lg">{block.text}</p>;
+      return <p className="text-gray-700 leading-relaxed mb-4 text-base md:text-lg">{block.text}</p>;
 
     case 'note':
       return (
@@ -27,7 +25,7 @@ export const BlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
           <div className="flex items-center gap-2 text-amber-700 font-semibold mb-1">
             <i className="fas fa-lightbulb"></i> Nota importante
           </div>
-          <p className="text-amber-900 italic">{block.text}</p>
+          <p className="text-amber-900 italic text-sm md:text-base">{block.text}</p>
         </div>
       );
 
@@ -57,7 +55,7 @@ export const BlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
           {block.items?.map((item, idx) => (
             <li key={idx} className="flex gap-3 items-start">
               <i className="fas fa-check-circle text-[#CD853F] mt-1 text-sm"></i>
-              <span className="text-gray-700">{item}</span>
+              <span className="text-gray-700 text-sm md:text-base">{item}</span>
             </li>
           ))}
         </ul>
@@ -65,17 +63,17 @@ export const BlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
 
     case 'table':
       return (
-        <div className="overflow-x-auto mb-8 shadow-sm rounded-lg">
-          <table className="w-full text-left border-collapse bg-white">
+        <div className="overflow-x-auto mb-8 shadow-sm rounded-lg border border-gray-100">
+          <table className="w-full text-left border-collapse bg-white text-sm md:text-base">
             <thead className="bg-[#8B4513] text-white">
               <tr>
-                {block.headers?.map((h, i) => <th key={i} className="px-6 py-3">{h}</th>)}
+                {block.headers?.map((h, i) => <th key={i} className="px-4 md:px-6 py-3">{h}</th>)}
               </tr>
             </thead>
             <tbody>
               {block.rows?.map((row, i) => (
                 <tr key={i} className="border-b hover:bg-gray-50">
-                  {row.map((cell, j) => <td key={j} className="px-6 py-4">{cell}</td>)}
+                  {row.map((cell, j) => <td key={j} className="px-4 md:px-6 py-3">{cell}</td>)}
                 </tr>
               ))}
             </tbody>
@@ -96,13 +94,13 @@ const Accordion: React.FC<{ items: any[] }> = ({ items }) => {
         <div key={idx} className="border rounded-lg overflow-hidden">
           <button 
             onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-            className="w-full px-6 py-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition"
+            className="w-full px-4 md:px-6 py-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition"
           >
-            <span className="font-semibold text-gray-800">{item.title}</span>
+            <span className="font-semibold text-gray-800 text-sm md:text-base text-left">{item.title}</span>
             <i className={`fas fa-chevron-down transition-transform ${openIdx === idx ? 'rotate-180' : ''}`}></i>
           </button>
           {openIdx === idx && (
-            <div className="px-6 py-4 bg-white text-gray-700 border-t">
+            <div className="px-4 md:px-6 py-4 bg-white text-gray-700 border-t text-sm md:text-base animate-fadeIn">
               {item.content}
             </div>
           )}
@@ -117,8 +115,8 @@ const QuizBlock: React.FC<{ question: string, options: any[], explanation?: stri
   const [showResult, setShowResult] = useState(false);
 
   return (
-    <div className="bg-white border-2 border-dashed border-[#CD853F] p-8 rounded-2xl mb-8">
-      <h4 className="text-xl font-bold text-gray-800 mb-6">{question}</h4>
+    <div className="bg-white border-2 border-dashed border-[#CD853F] p-4 md:p-8 rounded-2xl mb-8 shadow-sm">
+      <h4 className="text-lg md:text-xl font-bold text-gray-800 mb-6">{question}</h4>
       <div className="space-y-3">
         {options.map((opt, idx) => (
           <button
@@ -128,10 +126,10 @@ const QuizBlock: React.FC<{ question: string, options: any[], explanation?: stri
               selected === idx ? 'bg-[#8B4513] text-white' : 'bg-gray-100 hover:bg-gray-200'
             } ${showResult && opt.isCorrect ? 'bg-green-600 text-white' : ''} ${showResult && selected === idx && !opt.isCorrect ? 'bg-red-600 text-white' : ''}`}
           >
-            <span className="w-8 h-8 rounded-full border border-current flex items-center justify-center font-bold">
+            <span className="w-8 h-8 rounded-full border border-current flex items-center justify-center font-bold flex-shrink-0">
               {String.fromCharCode(65 + idx)}
             </span>
-            {opt.text}
+            <span className="text-sm md:text-base">{opt.text}</span>
           </button>
         ))}
       </div>
@@ -144,9 +142,9 @@ const QuizBlock: React.FC<{ question: string, options: any[], explanation?: stri
           Verificar respuesta
         </button>
       ) : (
-        <div className="mt-6 p-4 rounded-lg bg-gray-100">
+        <div className="mt-6 p-4 rounded-lg bg-gray-100 animate-slideUp">
           <p className="font-bold mb-2">{options[selected!].isCorrect ? '¡Excelente!' : 'Sigue intentándolo.'}</p>
-          <p className="text-gray-700">{explanation}</p>
+          <p className="text-gray-700 text-sm md:text-base">{explanation}</p>
         </div>
       )}
     </div>
@@ -156,10 +154,10 @@ const QuizBlock: React.FC<{ question: string, options: any[], explanation?: stri
 const Slideshow: React.FC<{ items: any[] }> = ({ items }) => {
   const [current, setCurrent] = useState(0);
   return (
-    <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-8">
-      <img src={items[current].image} alt="Slide" className="w-full h-80 object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8 text-white">
-        <p className="text-lg font-medium">{items[current].caption}</p>
+    <div className="relative rounded-2xl overflow-hidden shadow-xl mb-8">
+      <img src={items[current].image} alt="Slide" className="w-full h-64 md:h-80 object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-white">
+        <p className="text-base md:text-lg font-medium">{items[current].caption}</p>
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-2">
             {items.map((_, i) => (
@@ -167,10 +165,10 @@ const Slideshow: React.FC<{ items: any[] }> = ({ items }) => {
             ))}
           </div>
           <div className="flex gap-4">
-            <button onClick={() => setCurrent(prev => (prev === 0 ? items.length - 1 : prev - 1))} className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center">
+            <button onClick={() => setCurrent(prev => (prev === 0 ? items.length - 1 : prev - 1))} className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center">
               <i className="fas fa-chevron-left"></i>
             </button>
-            <button onClick={() => setCurrent(prev => (prev === items.length - 1 ? 0 : prev + 1))} className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center">
+            <button onClick={() => setCurrent(prev => (prev === items.length - 1 ? 0 : prev + 1))} className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center">
               <i className="fas fa-chevron-right"></i>
             </button>
           </div>

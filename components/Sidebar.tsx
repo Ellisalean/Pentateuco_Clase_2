@@ -7,16 +7,27 @@ interface SidebarProps {
   onSelectLesson: (id: string) => void;
   activeTab: 'outline' | 'resources';
   setActiveTab: (tab: 'outline' | 'resources') => void;
+  onClose?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson, activeTab, setActiveTab }) => {
-  // Calculamos el progreso real basado en la posición de la lección activa
+export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson, activeTab, setActiveTab, onClose }) => {
   const allLessons = MODULES.flatMap(m => m.lessons);
   const activeIndex = allLessons.findIndex(l => l.id === activeLessonId);
   const progress = Math.round(((activeIndex + 1) / allLessons.length) * 100);
 
   return (
-    <aside className="w-80 flex-shrink-0 bg-white border-r h-full flex flex-col overflow-hidden shadow-xl z-20">
+    <aside className="w-full h-full flex flex-col bg-white overflow-hidden">
+      {/* Header del Sidebar */}
+      <div className="p-4 flex items-center justify-between border-b min-h-[73px]">
+        <span className="font-bold text-[#8B4513] text-lg">PENTATEUCO</span>
+        <button 
+          onClick={onClose}
+          className="lg:hidden p-2 text-gray-400 hover:text-[#8B4513]"
+        >
+          <i className="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
       <div className="flex border-b">
         <button 
           onClick={() => setActiveTab('outline')}
@@ -51,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
             {MODULES.map((module) => (
               <div key={module.id} className="space-y-2">
                 <div className="flex items-center gap-2 text-[#8B4513] font-bold text-sm uppercase tracking-wider mb-2">
-                  <i className="fas fa-folder-open"></i> {module.title}
+                  <i className="fas fa-folder-open text-xs"></i> {module.title}
                 </div>
                 <div className="space-y-1">
                   {module.lessons.map((lesson) => (
@@ -67,19 +78,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
                       }`}>
                         <i className={`fas ${lesson.icon} text-sm`}></i>
                       </div>
-                      <div className="flex-1">
-                        <h4 className={`text-sm font-medium ${activeLessonId === lesson.id ? 'text-[#8B4513]' : 'text-gray-700'}`}>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-sm font-medium truncate ${activeLessonId === lesson.id ? 'text-[#8B4513]' : 'text-gray-700'}`}>
                           {lesson.title}
                         </h4>
-                        <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                        <div className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
                           <i className="far fa-clock"></i> {lesson.duration}
                         </div>
                       </div>
-                      {activeLessonId === lesson.id && (
-                        <div className="self-center">
-                           <div className="w-2 h-2 rounded-full bg-[#8B4513] animate-pulse"></div>
-                        </div>
-                      )}
                     </button>
                   ))}
                 </div>
@@ -88,34 +94,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
           </div>
         ) : (
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 px-2">Materiales de estudio</h3>
+            <h3 className="text-lg font-bold text-gray-800 px-2">Materiales</h3>
             {RESOURCES.map((resource, idx) => (
               <a 
                 key={idx} 
                 href={resource.link} 
                 target="_blank" 
                 rel="noreferrer"
-                className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition border border-transparent hover:border-[#CD853F]/20"
+                className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition border border-transparent"
               >
                 <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-[#CD853F]/10 rounded-lg flex items-center justify-center text-[#CD853F]">
-                    <i className={`fas ${resource.icon} text-xl`}></i>
+                  <div className="w-10 h-10 bg-[#CD853F]/10 rounded-lg flex items-center justify-center text-[#CD853F]">
+                    <i className={`fas ${resource.icon} text-lg`}></i>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 leading-tight">{resource.title}</h4>
-                    <p className="text-xs text-gray-500 mt-1">{resource.type} • {resource.meta}</p>
+                  <div className="min-w-0">
+                    <h4 className="font-semibold text-gray-900 leading-tight text-sm truncate">{resource.title}</h4>
+                    <p className="text-[10px] text-gray-500 mt-1">{resource.type} • {resource.meta}</p>
                   </div>
                 </div>
               </a>
             ))}
-            <div className="bg-amber-50 p-4 rounded-xl mt-6">
-              <h5 className="text-amber-700 font-bold text-sm flex items-center gap-2 mb-2">
-                <i className="fas fa-plus-circle"></i> Recursos Extras
-              </h5>
-              <p className="text-amber-800 text-xs leading-relaxed">
-                Utiliza concordancias y diccionarios teológicos para profundizar en el significado de los términos hebreos originales.
-              </p>
-            </div>
           </div>
         )}
       </div>

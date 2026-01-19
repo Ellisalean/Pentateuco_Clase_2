@@ -6,17 +6,18 @@ import { MODULES } from './data/courseContent';
 import { Lesson } from './types';
 
 const App: React.FC = () => {
-  // Mantenemos la lección de Génesis (lesson4) como activa por defecto a petición del usuario
   const [activeLessonId, setActiveLessonId] = useState('lesson4'); 
   const [activeTab, setActiveTab] = useState<'outline' | 'resources'>('outline');
   const [lesson, setLesson] = useState<Lesson | null>(null);
+  
+  // En PC iniciamos abierto, en móvil cerrado
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
     const allLessons = MODULES.flatMap(m => m.lessons);
     const found = allLessons.find(l => l.id === activeLessonId);
     if (found) {
       setLesson(found);
-      // Scroll to top on lesson change
       const mainElement = document.querySelector('main');
       if (mainElement) mainElement.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -37,56 +38,95 @@ const App: React.FC = () => {
   if (!lesson) return <div className="flex items-center justify-center h-screen"><i className="fas fa-spinner fa-spin text-4xl text-[#8B4513]"></i></div>;
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
-      <Sidebar 
-        activeLessonId={activeLessonId} 
-        onSelectLesson={setActiveLessonId} 
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
+    <div className="flex h-screen bg-gray-100 overflow-hidden relative">
+      
+      {/* Overlay para móviles (Cierra el menú al tocar fuera) */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsSidebarOpen(false)}
       />
 
+      {/* Contenedor del Sidebar con lógica de retracción real */}
+      <div 
+        className={`fixed lg:relative inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out bg-white border-r overflow-hidden ${
+          isSidebarOpen ? 'w-80' : 'w-0 lg:w-0 -translate-x-full lg:translate-x-0'
+        }`}
+      >
+        <div className="w-80 h-full">
+          <Sidebar 
+            activeLessonId={activeLessonId} 
+            onSelectLesson={(id) => {
+              setActiveLessonId(id);
+              if (window.innerWidth < 1024) setIsSidebarOpen(false);
+            }} 
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        </div>
+      </div>
+
+      {/* Botón de Menú (Hamburguesa) - Posicionamiento adaptativo */}
+      <button 
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed top-4 left-4 z-50 bg-[#8B4513] text-white w-12 h-12 rounded-xl shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+        aria-label="Abrir/Cerrar menú"
+      >
+        <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
+      </button>
+
+      {/* Área de Contenido Principal */}
       <main className="flex-1 overflow-y-auto relative scroll-smooth bg-[#f5f7fb]">
+        
         {/* Banner Section */}
-        <div className="relative h-96 w-full flex items-end">
+        <div className="relative h-80 md:h-96 w-full flex items-end">
           <div 
             className="absolute inset-0 bg-cover bg-center transition-all duration-700"
             style={{ backgroundImage: `url('${lesson.bannerImage}')` }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#8B4513] via-[#8B4513]/40 to-transparent"></div>
           </div>
-          <div className="relative z-10 px-12 pb-12 text-white max-w-5xl">
-            <div className="flex items-center gap-2 text-sm font-medium mb-4 opacity-80 uppercase tracking-widest">
-              <span>BibliaConnect</span>
-              <i className="fas fa-chevron-right text-[10px]"></i>
+          <div className="relative z-10 px-6 md:px-12 pb-8 md:pb-12 text-white max-w-5xl">
+            <div className="flex items-center gap-2 text-xs md:text-sm font-medium mb-2 md:mb-4 opacity-80 uppercase tracking-widest pl-10 md:pl-0">
+              <span className="hidden sm:inline">BibliaConnect</span>
+              <i className="fas fa-chevron-right text-[8px] md:text-[10px] hidden sm:inline"></i>
               <span>Pentateuco</span>
-              <i className="fas fa-chevron-right text-[10px]"></i>
+              <i className="fas fa-chevron-right text-[8px] md:text-[10px]"></i>
               <span>Génesis</span>
             </div>
-            <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">{lesson.title}</h1>
-            <p className="text-xl opacity-90 font-light max-w-2xl drop-shadow-md">{lesson.subtitle}</p>
+            <h1 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg leading-tight pl-10 md:pl-0">
+              {lesson.title}
+            </h1>
+            <p className="text-base md:text-xl opacity-90 font-light max-w-2xl drop-shadow-md pl-10 md:pl-0">
+              {lesson.subtitle}
+            </p>
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          <div className="bg-white rounded-3xl shadow-xl overflow-hidden p-8 md:p-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl overflow-hidden p-6 sm:p-8 md:p-12">
             {lesson.blocks.map((block, idx) => (
               <BlockRenderer key={idx} block={block} />
             ))}
 
-            {/* Navigation Footer */}
-            <div className="mt-16 pt-8 border-t flex justify-between items-center">
+            {/* Navegación Inferior */}
+            <div className="mt-12 md:mt-16 pt-6 md:pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
               <button 
                 onClick={handlePrev}
-                disabled={activeLessonId === MODULES[0].lessons[0].id}
-                className={`font-bold hover:translate-x-[-4px] transition flex items-center gap-2 ${activeLessonId === MODULES[0].lessons[0].id ? 'text-gray-300' : 'text-[#8B4513]'}`}
+                disabled={activeLessonId === 'lesson1'}
+                className={`w-full sm:w-auto font-bold transition flex items-center justify-center gap-2 px-6 py-3 rounded-xl ${
+                  activeLessonId === 'lesson1' ? 'text-gray-300' : 'text-[#8B4513] hover:bg-[#8B4513]/5'
+                }`}
               >
                  <i className="fas fa-arrow-left"></i> Anterior
               </button>
               <button 
                 onClick={handleNext}
-                disabled={activeLessonId === MODULES[MODULES.length-1].lessons[MODULES[MODULES.length-1].lessons.length-1].id}
-                className={`bg-gradient-to-r from-[#CD853F] to-[#8B4513] text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100`}
+                disabled={activeLessonId === 'lesson5'}
+                className={`w-full sm:w-auto bg-gradient-to-r from-[#CD853F] to-[#8B4513] text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100`}
               >
                 Siguiente Lección <i className="fas fa-arrow-right"></i>
               </button>
@@ -94,13 +134,8 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <footer className="py-12 text-center text-gray-400 text-sm">
-          <p>© 2025 Latin Theological Semninary - Pentateuco: Los Orígenes</p>
-          <div className="flex justify-center gap-6 mt-4">
-            <a href="#" className="hover:text-[#8B4513] transition"></a>
-            <a href="#" className="hover:text-[#8B4513] transition"></a>
-            <a href="#" className="hover:text-[#8B4513] transition"></a>
-          </div>
+        <footer className="py-12 text-center text-gray-400 text-sm px-4">
+          <p>© 2025 Latin Theological Seminary - Pentateuco: Los Orígenes</p>
         </footer>
       </main>
     </div>
