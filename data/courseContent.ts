@@ -36,7 +36,7 @@ export const MODULES: Module[] = [
         subtitle: "Comprendiendo los cimientos de la revelación divina",
         duration: "20 min",
         icon: "fa-video",
-        bannerImage: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=1200",
+        bannerImage: "https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/8f7151ba-3daf-4875-bee9-2c3f86f4823e_rw_1920.png?h=e5ae7af8f54183cb1048b7fb81bae8d9",
         blocks: [
           { type: 'heading', level: 2, text: 'Bienvenida al Curso' },
           { type: 'paragraph', text: 'El Pentateuco no es solo una colección de libros antiguos; es el fundamento de toda la teología bíblica. Aquí encontramos el origen del universo, la formación del pueblo de Dios y la entrega de la Ley.' },
@@ -59,7 +59,7 @@ export const MODULES: Module[] = [
         subtitle: "Moisés como el legislador y los grandes ejes del texto",
         duration: "40 min",
         icon: "fa-book",
-        bannerImage: "https://images.unsplash.com/photo-1432888622747-4eb9a8f2c20e?auto=format&fit=crop&q=80&w=1200",
+        bannerImage: "https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/fc6f37a1-3ab6-4673-8db9-c3794b3db382_rw_1920.jpg?h=e122951ba59a2f3544ca8c9411944c7e",
         blocks: [
           { type: 'heading', level: 2, text: 'La Autoría Mosaica' },
           { type: 'paragraph', text: 'La tradición bíblica y externa atribuye unánimemente la autoría a Moisés. El mismo Pentateuco afirma que Moisés escribió gran parte del contenido por orden divina.' },
@@ -93,7 +93,7 @@ export const MODULES: Module[] = [
         subtitle: "Bereshit: El comienzo de la historia de la salvación",
         duration: "45 min",
         icon: "fa-seedling",
-        bannerImage: "https://images.unsplash.com/photo-1464802686167-b939a67a06a1?auto=format&fit=crop&q=80&w=1200",
+        bannerImage: "https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/8ba045dc-f873-45bf-bfbd-57c9e387a553_rw_1920.jpg?h=dc618acc13c5c9bd3a60bde08294080b",
         blocks: [
           { type: 'heading', level: 2, text: 'I. Introducción al Libro de Génesis' },
           { type: 'paragraph', text: 'Génesis es el libro de los comienzos: el comienzo del universo, del género humano, del pecado y de la promesa de redención. Su nombre en hebreo es "Bereshit", que significa "En el principio".' },
@@ -127,8 +127,8 @@ export const MODULES: Module[] = [
           { type: 'heading', level: 3, text: 'IV. Diluvio y Babel (Caps. 4-11)' },
           { type: 'paragraph', text: 'Vemos la expansión del pecado desde un asesinato familiar (Caín) hasta la corrupción mundial. Dios interviene con juicio (Diluvio) pero mantiene Su pacto con Noé, simbolizado por el arco iris.' },
           { type: 'slideshow', items: [
-            { image: 'https://images.unsplash.com/photo-1543333995-a78439f7384a?auto=format&fit=crop&q=80&w=800', caption: 'El Arca de Noé: Tipo de Cristo como único medio de salvación frente al juicio.' },
-            { image: 'https://images.unsplash.com/photo-1481142889578-df05d23c0d17?auto=format&fit=crop&q=80&w=800', caption: 'La Torre de Babel: El intento del hombre de llegar al cielo por sus propios medios.' }
+            { image: 'https://cdn.activechristianity.org/image/upload/c_thumb,h_300,w_600,g_center/v1607545805/en/c360564eea2321ecec7713d1ec25147a.jpg', caption: 'El Arca de Noé: Tipo de Cristo como único medio de salvación frente al juicio.' },
+            { image: 'https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/766639e9-e325-4d82-b32c-1f4d8f879324_rw_1920.jpg?h=37e6e06272e885f9515bcf162a0b85ad', caption: 'La Torre de Babel: El intento del hombre de llegar al cielo por sus propios medios.' }
           ]}
         ]
       },
@@ -138,7 +138,7 @@ export const MODULES: Module[] = [
         subtitle: "La historia de la fe: Abraham, Isaac, Jacob y José",
         duration: "55 min",
         icon: "fa-users",
-        bannerImage: "https://images.unsplash.com/photo-1510133769068-ad0124395a70?auto=format&fit=crop&q=80&w=1200",
+        bannerImage: "https://cdn.myportfolio.com/d435fa58-d32c-4141-8a15-0f2bfccdea41/d9004869-650b-40ef-807c-6b86c9e453c9_rw_1920.jpg?h=402a77467b76d4728add633d7c23b942",
         blocks: [
           { type: 'heading', level: 2, text: 'V. El Ciclo de Abraham: El Padre de la Fe' },
           { type: 'paragraph', text: 'El llamado de Abraham en Génesis 12 marca un giro en la historia. Dios ya no trata con todas las naciones a la vez, sino que elige a un hombre para bendecir a todas las familias de la tierra.' },
