@@ -10,7 +10,7 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'outline' | 'resources'>('outline');
   const [lesson, setLesson] = useState<Lesson | null>(null);
   
-  // En PC iniciamos abierto, en móvil cerrado
+  // En PC iniciamos abierto, en móvil cerrado por defecto para mejor vista
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden relative">
       
-      {/* Overlay para móviles (Cierra el menú al tocar fuera) */}
+      {/* Overlay para móviles */}
       <div 
         className={`fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 ${
           isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -48,7 +48,7 @@ const App: React.FC = () => {
         onClick={() => setIsSidebarOpen(false)}
       />
 
-      {/* Contenedor del Sidebar con lógica de retracción real */}
+      {/* Sidebar Retráctil */}
       <div 
         className={`fixed lg:relative inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out bg-white border-r overflow-hidden ${
           isSidebarOpen ? 'w-80' : 'w-0 lg:w-0 -translate-x-full lg:translate-x-0'
@@ -68,19 +68,21 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Botón de Menú (Hamburguesa) - Posicionamiento adaptativo */}
-      <button 
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-4 left-4 z-50 bg-[#8B4513] text-white w-12 h-12 rounded-xl shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
-        aria-label="Abrir/Cerrar menú"
-      >
-        <i className={`fas ${isSidebarOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
-      </button>
+      {/* Botón de APERTURA (Solo se ve si el menú está cerrado) */}
+      {!isSidebarOpen && (
+        <button 
+          onClick={() => setIsSidebarOpen(true)}
+          className="fixed top-4 left-4 z-50 bg-[#8B4513] text-white w-12 h-12 rounded-xl shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+          aria-label="Abrir menú"
+        >
+          <i className="fas fa-bars text-xl"></i>
+        </button>
+      )}
 
       {/* Área de Contenido Principal */}
       <main className="flex-1 overflow-y-auto relative scroll-smooth bg-[#f5f7fb]">
         
-        {/* Banner Section */}
+        {/* Banner Section con espaciado inteligente */}
         <div className="relative h-80 md:h-96 w-full flex items-end">
           <div 
             className="absolute inset-0 bg-cover bg-center transition-all duration-700"
@@ -89,19 +91,22 @@ const App: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#8B4513] via-[#8B4513]/40 to-transparent"></div>
           </div>
           <div className="relative z-10 px-6 md:px-12 pb-8 md:pb-12 text-white max-w-5xl">
-            <div className="flex items-center gap-2 text-xs md:text-sm font-medium mb-2 md:mb-4 opacity-80 uppercase tracking-widest pl-10 md:pl-0">
-              <span className="hidden sm:inline">BibliaConnect</span>
-              <i className="fas fa-chevron-right text-[8px] md:text-[10px] hidden sm:inline"></i>
-              <span>Pentateuco</span>
-              <i className="fas fa-chevron-right text-[8px] md:text-[10px]"></i>
-              <span>Génesis</span>
+            {/* Ajuste de padding izquierdo cuando el botón de hamburguesa está presente */}
+            <div className={`transition-all duration-300 ${!isSidebarOpen ? 'pl-12 md:pl-0' : 'pl-0'}`}>
+              <div className="flex items-center gap-2 text-xs md:text-sm font-medium mb-2 md:mb-4 opacity-80 uppercase tracking-widest">
+                <span className="hidden sm:inline">BibliaConnect</span>
+                <i className="fas fa-chevron-right text-[8px] md:text-[10px] hidden sm:inline"></i>
+                <span>Pentateuco</span>
+                <i className="fas fa-chevron-right text-[8px] md:text-[10px]"></i>
+                <span>Génesis</span>
+              </div>
+              <h1 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg leading-tight">
+                {lesson.title}
+              </h1>
+              <p className="text-base md:text-xl opacity-90 font-light max-w-2xl drop-shadow-md">
+                {lesson.subtitle}
+              </p>
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 drop-shadow-lg leading-tight pl-10 md:pl-0">
-              {lesson.title}
-            </h1>
-            <p className="text-base md:text-xl opacity-90 font-light max-w-2xl drop-shadow-md pl-10 md:pl-0">
-              {lesson.subtitle}
-            </p>
           </div>
         </div>
 

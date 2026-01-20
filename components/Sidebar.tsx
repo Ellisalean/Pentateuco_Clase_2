@@ -17,14 +17,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeLessonId, onSelectLesson
 
   return (
     <aside className="w-full h-full flex flex-col bg-white overflow-hidden">
-      {/* Header del Sidebar */}
+      {/* Header del Sidebar con botón de cierre interno mejorado */}
       <div className="p-4 flex items-center justify-between border-b min-h-[73px]">
-        <span className="font-bold text-[#8B4513] text-lg">PENTATEUCO</span>
+        <span className="font-bold text-[#8B4513] text-lg tracking-tight">PENTATEUCO</span>
+        
+        {/* Botón de cierre integrado: Flecha hacia la izquierda */}
         <button 
           onClick={onClose}
-          className="lg:hidden p-2 text-gray-400 hover:text-[#8B4513]"
+          className="p-2 w-10 h-10 rounded-lg bg-gray-50 text-gray-400 hover:text-[#8B4513] hover:bg-[#8B4513]/10 transition-all flex items-center justify-center shadow-sm"
+          title="Ocultar menú"
         >
-          <i className="fas fa-times text-xl"></i>
+          <i className="fas fa-chevron-left text-lg"></i>
         </button>
       </div>
 
